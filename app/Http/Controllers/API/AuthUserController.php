@@ -77,9 +77,6 @@ class AuthUserController extends Controller
         $user->assignRole('Admin');
     }
 
-    public function createPlayer()
-    {
-    }
     public function edit($id)
     {
     }

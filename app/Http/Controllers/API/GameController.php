@@ -2,127 +2,133 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\PlayerThrowsDices;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Game;
-use Illuminate\Http\Request;
 use App\Http\Resources\GameResource;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
 
 class GameController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function throw($id)
     {
-        $game = Game::all();
-        return response([
-            'game' => $game,
-            'message' => 'Retrieved Succesfully',
-            'status' => 200,
-        ]);
-    }
-
- 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $data = $request->all();
-
-        $validator = Validator::make($data, [
-            'dice1' => 'required|integer|min:1|max:6',
-            'dice2' => 'required|integer|min:1|max:6',
-            'result' => 'required|boolean',
-            'user_id' => 'required',
-        ]);
-
-        if ($validator->fails()) {
+        $user_auth_id = Auth::id();
+        $user = User::find($id);
+        if (!$user) {
             return response([
-                'error' => $validator->errors(),
-                'message' => 'Validation Fail',
-                'status' => 400,
+                'message' => 'Unregistred User',
+                'status' => 404,
+            ]);
+        } elseif ($user_auth_id == $id || $user->hasRole('Admin')) {
+            $dice1 = rand(1, 6);
+            $dice2 = rand(1, 6);
+
+            $event = event(new PlayerThrowsDices($id, $dice1, $dice2));
+
+            $game = Game::create([
+                $event
+            ]);
+
+            return response([
+                'game' => new GameResource($game),
+                'message' => 'Well played!',
+                'status' => 200,
+            ]);
+        } else {
+            return response([
+                'message' => 'Sorry, you are not authorized to perform this action.',
+                'status' => 403,
             ]);
         }
-
-        $game = Game::create($data);
-
-        return response([
-            'game' => new GameResource($game),
-            'message' => 'Created Succesfully',
-            'status' => 200,
-        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Game  $game
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Game $game)
+    public function showAllGamesFromUser($id)
     {
-        return response([
-            'game' => new GameResource($game),
-            'message' => 'Retrieved Succesfully',
-            'status' => 200
-        ]);
+        $user_auth_id = Auth::id();;
+        $user = User::find($id);
+        $games = $user->games;
+
+        if (!$user) {
+            return response([
+                'message' => 'Unregistred User',
+                'status' => 404,
+            ]);
+        } elseif ($user_auth_id == $id || $user->hasRole('Admin')) {
+            $games = Game::all();
+            if (!$games) {
+                return response([
+                    'message' => 'This user ' . $user->name . 'has not played yet.',
+                    'status' => 200,
+                ]);
+            } else {
+                return response([
+                    'games' => $games,
+                    'message' => 'Retrieved Succesfully',
+                    'status' => 200,
+                ]);
+            }
+        } else {
+            return response([
+                'message' => 'Sorry, you are not authorized to perform this action.',
+                'status' => 403,
+            ]);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Game  $game
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Game $game)
+    public function showOneGame(Game $game)
     {
-        //
+        $user_auth_id = Auth::id();
+        $user = $game->player;
+        $user_id = $user->id;
+
+        if (!$user) {
+            return response([
+                'message' => 'Unregistred User',
+                'status' => 404,
+            ]);
+        } elseif ($user_auth_id == $user_id || $user->hasRole('Admin')) {
+            return response([
+                'game' => new GameResource($game),
+                'message' => 'This user ' . $user->name . 'just played.',
+                'status' => 200,
+            ]);
+        } else {
+            return response([
+                'message' => 'Sorry, you are not authorized to perform this action.',
+                'status' => 403,
+            ]);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Game  $game
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Game $game)
-    {
-        $game->update($request->all());
-
-        return response([
-            'game' => new GameResource($game),
-            'message' => 'Retrieved Succesfully',
-            'status' => 200,
-        ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Game  $game
-     * @return \Illuminate\Http\Response
-     */
-
-    public function destroy(User $user)
+    public function destroyThrowsFromUser($id)
     {
         // A specific game cannot be deleted. 
         // Only a user's total execution log can be deleted.
-        $allGamesFromUser = $user->games();
-        $allGamesFromUser->delete();
+        $user_auth_id = Auth::id();
+        $user = User::find($id);
 
-        return response([
-            'game' => new GameResource($allGamesFromUser),
-            'message' => 'Deleted',
-            'status' => 200,
-        ]);
+        if (!$user) {
+            return response([
+                'message' => 'Unregistred User',
+                'status' => 404,
+            ]);
+        } elseif ($user_auth_id == $id || $user->hasRole('Admin')) {
+            $user = User::find($id);
+            $allGamesFromUser = $user->games();
+            $allGamesFromUser->delete();
+
+            return response([
+                'game' => 0,
+                'message' => 'Deleted All Data From User' . $user->name,
+                'status' => 200,
+            ]);
+        } else {
+            return response([
+                'message' => 'Sorry, you are not authorized to perform this action.',
+                'status' => 403,
+            ]);
+        }
     }
 }
