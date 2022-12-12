@@ -15,15 +15,15 @@ class AuthUserController extends Controller
         if ($request['name'] == null) {
             $validatedData = $request->validate([
                 'name' => 'nullable',
-                'email' => 'required|email|unique:users',
+                'email' => 'required|email|unique:users,email',
                 'password' => 'required|confirmed',
                 'password_confirmation' => 'required'
             ]);
             $validatedData['name'] = 'Anonymous';
         } else {
             $validatedData = $request->validate([
-                'name' => 'required|max:255',
-                'email' => 'required|email|unique:users',
+                'name' => 'required|max:25|unique:users,name',
+                'email' => 'required|email|unique:users,email',
                 'password' => 'required|confirmed',
                 'password_confirmation' => 'required'
             ]);
@@ -73,7 +73,7 @@ class AuthUserController extends Controller
         $request->user()->token()->revoke();
         return response([
             'user' => Auth::user(),
-            'message' => 'Succesfully Logged',
+            'message' => 'Successfully Logged',
             'status' => 200
         ]);
     }
@@ -88,7 +88,33 @@ class AuthUserController extends Controller
         $user->assignRole('Admin');
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        $user_auth_id = Auth::id();;
+        $user = User::find($id);
+
+        if (!$user) {
+            return response([
+                'message' => 'Unregistred User',
+                'status' => 404,
+            ]);
+        } elseif ($user_auth_id == $id || $user->hasRole('Admin')) {
+
+            $request->validate([
+                'name' => 'max:25|unique:users',
+            ]);
+
+            $user->update($request->all());
+            return response([
+                'user' => $user,
+                'message' => 'Successfully User Updated',
+                'status' => 200,
+            ]);
+        } else {
+            return response([
+                'message' => 'Sorry, you are not authorized to perform this action.',
+                'status' => 403,
+            ]);
+        }
     }
 }

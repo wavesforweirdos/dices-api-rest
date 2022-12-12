@@ -65,7 +65,7 @@ class GameController extends Controller
             } else {
                 return response([
                     'games' => $games,
-                    'message' => 'Retrieved Succesfully',
+                    'message' => 'Retrieved Successfully',
                     'status' => 200,
                 ]);
             }
