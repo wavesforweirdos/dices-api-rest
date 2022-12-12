@@ -12,11 +12,22 @@ class AuthUserController extends Controller
 {
     public function register(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
-        ]);
+        if ($request['name'] == null) {
+            $validatedData = $request->validate([
+                'name' => 'nullable',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|confirmed',
+                'password_confirmation' => 'required'
+            ]);
+            $validatedData['name'] = 'Anonymous';
+        } else {
+            $validatedData = $request->validate([
+                'name' => 'required|max:255',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|confirmed',
+                'password_confirmation' => 'required'
+            ]);
+        };
 
         $validatedData['password'] = Hash::make($request->password);
         $user = User::create($validatedData);
