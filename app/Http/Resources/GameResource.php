@@ -17,16 +17,18 @@ class GameResource extends JsonResource
     {
         //Resultado de la partida
         if (!$this->result) {
-            $result = 'You lost!';
+            $textResult = 'You lost!';
         } else {
-            $result = 'You win!';
+            $textResult = 'You win!';
         };
+
+        $total = $this->dice1 + $this->dice2;
 
         return [
             'game' => [
                 'dice1' => $this->dice1,
                 'dice2' => $this->dice2,
-                'message' => $result . 'The sum of your throw is ' . ($this->dices1 + $this->dices2) . '.',
+                'message' => $textResult . ' The sum of your throw is ' . $total . '.',
             ]
         ];
     }

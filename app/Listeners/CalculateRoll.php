@@ -15,7 +15,7 @@ class CalculateRoll
 
     public function handle(PlayerThrowsDices $event)
     {
-        $total = $this->dice1 + $this->dice2;
+        $total = $event->dice1 + $event->dice2;
 
         switch ($total) {
             case 7:
@@ -26,11 +26,6 @@ class CalculateRoll
                 break;
         }
 
-        return [
-            'dice1' => $this->dice1,
-            'dice2' => $this->dice2,
-            'result' => $this->result,
-            'user_id' => $this->id
-        ];
+        return $this->result;
     }
 }

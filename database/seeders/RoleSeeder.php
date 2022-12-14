@@ -19,20 +19,20 @@ class RoleSeeder extends Seeder
         $roleAdmin = Role::create(['name' => 'Admin']);
         $rolePlayer = Role::create(['name' => 'Player']);
 
-        Permission::create(['name' => 'admin.home'])->syncRoles([$roleAdmin]);
+        Permission::create(['name' => 'admin.home'])->assignRole([$roleAdmin]);
         Permission::create(['name' => 'register'])->syncRoles([$roleAdmin, $rolePlayer]);
         Permission::create(['name' => 'login'])->syncRoles([$roleAdmin, $rolePlayer]);
         Permission::create(['name' => 'logout'])->syncRoles([$roleAdmin, $rolePlayer]);
 
-        Permission::create(['name' => 'createPlayer'])->syncRoles([$roleAdmin, $rolePlayer]);
         Permission::create(['name' => 'editName'])->syncRoles([$roleAdmin, $rolePlayer]);
         Permission::create(['name' => 'throw'])->syncRoles([$roleAdmin, $rolePlayer]);
         Permission::create(['name' => 'deleteThrows'])->syncRoles([$roleAdmin, $rolePlayer]);
-
-        Permission::create(['name' => 'admin.show-victories'])->syncRoles($roleAdmin);
         Permission::create(['name' => 'throws'])->syncRoles([$roleAdmin, $rolePlayer]);
-        Permission::create(['name' => 'admin.show-players'])->syncRoles($roleAdmin);
-        Permission::create(['name' => 'admin.loser'])->syncRoles($roleAdmin);
-        Permission::create(['name' => 'admin.winner'])->syncRoles($roleAdmin);
+
+        Permission::create(['name' => 'admin.fullSuccessRateRecord'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'admin.ranking'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'admin.loser'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'admin.winner'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'admin.successRate'])->assignRole($roleAdmin);
     }
 }

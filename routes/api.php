@@ -29,8 +29,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/players/{id}/games', [GameController::class, 'destroyThrowsFromUser'])->name('deleteThrows'); //delete all player's throws
     Route::get('/players/{id}/games', [GameController::class, 'showAllGamesFromUser'])->name('throws'); //throws of onePlayer
 
-    Route::get('/players', [GameController::class, 'show-victories'])->middleware('can:admin.show-victories')->name('admin.show-victories'); //%victories of allPlayers
-    Route::get('/players/ranking', [GameController::class, 'show-players'])->middleware('can:admin.show-players')->name('admin.show-players'); //%victories of allGame sortBy Asc
-    Route::get('/players/ranking/loser', [GameController::class, 'show-loser'])->middleware('can:admin.loser')->name('admin.loser'); //loser player
-    Route::get('/players/ranking/winner', [GameController::class, 'show-winner'])->middleware('can:admin.winner')->name('admin.winner'); //winner player
+    Route::get('/players', [GameController::class, 'fullSuccessRateRecord'])->name('admin.fullSuccessRateRecord'); //allPlayers & their %victories
+    Route::get('/players/ranking', [GameController::class, 'ranking'])->name('admin.ranking'); //%victories of allGame sortBy Asc
+    Route::get('/players/ranking/loser', [GameController::class, 'loser'])->name('admin.loser'); //loser player
+    Route::get('/players/ranking/winner', [GameController::class, 'winner'])->name('admin.winner'); //winner player
+    Route::get('/players/successRate', [GameController::class, 'successRate'])->name('admin.successRate'); //success rate
 });
