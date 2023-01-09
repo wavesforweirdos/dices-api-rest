@@ -15,19 +15,20 @@ class GameController extends Controller
 
     public function __construct()
     {
-        $this->middleware('role:Admin')->only('fullSuccessRateRecord', 'ranking', 'loser', 'winner', 'successRate');
+        $this->middleware('role:Admin')->only('fullSuccessRateRecord', 'successRate');
     }
 
     public function throw($id)
     {
         $user_auth_id = Auth::id();
+        $user_auth = Auth::user();
         $user = User::find($id);
         if (!$user) {
             return response([
                 'message' => 'Unregistred User',
                 'status' => 404,
             ]);
-        } elseif ($user_auth_id == $id || $user->hasRole('Admin')) {
+        } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
 
             $dice1 = rand(1, 6);
             $dice2 = rand(1, 6);
@@ -55,7 +56,8 @@ class GameController extends Controller
 
     public function showAllGamesFromUser($id)
     {
-        $user_auth_id = Auth::id();;
+        $user_auth_id = Auth::id();
+        $user_auth = Auth::user();
         $user = User::find($id);
 
         if (!$user) {
@@ -63,7 +65,7 @@ class GameController extends Controller
                 'message' => 'Unregistred User',
                 'status' => 404,
             ]);
-        } elseif ($user_auth_id == $id || $user->hasRole('Admin')) {
+        } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
             $games = $user->games;
             $countGames = count($games);
             if (!$countGames) {
@@ -81,7 +83,7 @@ class GameController extends Controller
         } else {
             return response([
                 'message' => 'Sorry, you are not authorized to perform this action.',
-                'status' => 403,
+                'status' => 401,
             ]);
         }
     }
@@ -91,6 +93,7 @@ class GameController extends Controller
         // A specific game cannot be deleted. 
         // Only a user's total execution log can be deleted.
         $user_auth_id = Auth::id();
+        $user_auth = Auth::user();
         $user = User::find($id);
 
         if (!$user) {
@@ -98,8 +101,7 @@ class GameController extends Controller
                 'message' => 'Unregistred User',
                 'status' => 404,
             ]);
-        } elseif ($user_auth_id == $id || $user->hasRole('Admin')) {
-            $user = User::find($id);
+        } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
             $allGamesFromUser = $user->games();
             $allGamesFromUser->delete();
 
@@ -111,7 +113,7 @@ class GameController extends Controller
         } else {
             return response([
                 'message' => 'Sorry, you are not authorized to perform this action.',
-                'status' => 403,
+                'status' => 401,
             ]);
         }
     }
@@ -146,6 +148,7 @@ class GameController extends Controller
             ->join('users', 'games.user_id', '=', 'users.id')
             ->groupBy('ID Player', 'Player')
             ->orderByDesc('Success')
+            ->orderByDesc('Games')
             ->orderBy('users.id')
             ->get();
 
