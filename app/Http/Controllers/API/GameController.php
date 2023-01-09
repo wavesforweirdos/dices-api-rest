@@ -49,7 +49,7 @@ class GameController extends Controller
         } else {
             return response([
                 'message' => 'Sorry, you are not authorized to perform this action.',
-                'status' => 403,
+                'status' => 401,
             ]);
         }
     }
