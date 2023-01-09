@@ -30,9 +30,9 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'throws'])->syncRoles([$roleAdmin, $rolePlayer]);
 
         Permission::create(['name' => 'admin.fullSuccessRateRecord'])->assignRole($roleAdmin);
-        Permission::create(['name' => 'admin.ranking'])->assignRole($roleAdmin);
-        Permission::create(['name' => 'admin.loser'])->assignRole($roleAdmin);
-        Permission::create(['name' => 'admin.winner'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'ranking'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'loser'])->assignRole($roleAdmin);
+        Permission::create(['name' => 'winner'])->assignRole($roleAdmin);
         Permission::create(['name' => 'admin.successRate'])->assignRole($roleAdmin);
     }
 }

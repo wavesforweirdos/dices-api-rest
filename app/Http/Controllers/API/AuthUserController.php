@@ -67,10 +67,9 @@ class AuthUserController extends Controller
         };
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-
-        $request->user()->token()->revoke();
+        Auth::user()->token()->revoke();
         return response([
             'user' => Auth::user(),
             'message' => 'Successfully Logged',
@@ -78,19 +77,10 @@ class AuthUserController extends Controller
         ]);
     }
 
-    public function assignPlayerRole(User $user)
-    {
-        $user->assignRole('Player');
-    }
-
-    public function assignAdminRole(User $user)
-    {
-        $user->assignRole('Admin');
-    }
-
     public function edit(Request $request, $id)
     {
-        $user_auth_id = Auth::id();;
+        $user_auth_id = Auth::id();
+        $user_auth = Auth::user();
         $user = User::find($id);
 
         if (!$user) {
@@ -98,10 +88,10 @@ class AuthUserController extends Controller
                 'message' => 'Unregistred User',
                 'status' => 404,
             ]);
-        } elseif ($user_auth_id == $id || $user->hasRole('Admin')) {
+        } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
 
             $request->validate([
-                'name' => 'max:25|unique:users',
+                'name' => 'required|min:4|max:25|unique:users',
             ]);
 
             $user->update($request->all());
@@ -113,7 +103,7 @@ class AuthUserController extends Controller
         } else {
             return response([
                 'message' => 'Sorry, you are not authorized to perform this action.',
-                'status' => 403,
+                'status' => 401,
             ]);
         }
     }
