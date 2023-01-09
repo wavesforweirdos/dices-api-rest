@@ -21,13 +21,14 @@ class GameController extends Controller
     public function throw($id)
     {
         $user_auth_id = Auth::id();
+        $user_auth = Auth::user();
         $user = User::find($id);
         if (!$user) {
             return response([
                 'message' => 'Unregistred User',
                 'status' => 404,
             ]);
-        } elseif ($user_auth_id == $id || $user->hasRole('Admin')) {
+        } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
 
             $dice1 = rand(1, 6);
             $dice2 = rand(1, 6);
@@ -112,7 +113,7 @@ class GameController extends Controller
         } else {
             return response([
                 'message' => 'Sorry, you are not authorized to perform this action.',
-                'status' => 403,
+                'status' => 401,
             ]);
         }
     }
