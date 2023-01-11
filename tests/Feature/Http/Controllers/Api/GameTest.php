@@ -95,15 +95,13 @@ class GameTest extends TestCase
         $user1 = User::factory()->create()->assignRole('Player');
         $user2 = User::factory()
             ->has(Game::factory()->count(5))
-            ->create()
-            ->assignRole('Player');
+            ->create();
         Passport::actingAs($user1);
 
         $response = $this->get(
             route('throws', $user2->id)
-        );
+        )->assertStatus(401);
 
-        $response->assertUnauthorized();
     }
 
     /** @test */
@@ -112,7 +110,10 @@ class GameTest extends TestCase
         $this->artisan('passport:install');
 
         $admin = User::factory()->create()->assignRole('Admin');
-        $user = User::factory()->create()->assignRole('Player');
+        $user = User::factory()
+            ->has(Game::factory()->count(5))
+            ->create()
+            ->assignRole('Player');
         Passport::actingAs($admin);
 
         $response = $this->get(

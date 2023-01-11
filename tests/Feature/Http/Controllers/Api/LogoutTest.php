@@ -24,8 +24,10 @@ class LogoutTest extends TestCase
         $this->artisan('passport:install');
         $user = User::factory()->create();
         Passport::actingAs($user);
-
-        $response = $this->postJson('logout');
-        $response->assertStatus(200);
+        
+        $response = $this->post(route('logout'))
+        ->assertStatus(200);
+        
+        $this->assertAuthenticated();
     }
 }
