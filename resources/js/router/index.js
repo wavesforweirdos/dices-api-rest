@@ -20,11 +20,6 @@ const router = createRouter({
       component: () => import('../../views/auth/RegisterView.vue')
     },
     {
-      path: '/logout',
-      name: 'logout',
-      component: () => import('../../views/auth/LogoutView.vue')
-    },
-    {
       path: '/game',
       name: 'game',
       component: () => import('../../views/game/GameView.vue')
@@ -35,10 +30,10 @@ const router = createRouter({
       component: () => import('../../views/game/RankingView.vue')
     },
     {
-      path: '/stats',
+      path: '/stats/:id',
       name: 'stats',
       component: () => import('../../views/game/StatsView.vue')
-    },
+    }
   ]
 })
 

@@ -10,6 +10,7 @@ use App\Http\Resources\GameResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+
 class GameController extends Controller
 {
 
@@ -21,8 +22,9 @@ class GameController extends Controller
     public function throw($id)
     {
         $user_auth_id = Auth::id();
-        $user_auth = Auth::user();
+        $user_auth = User::find($user_auth_id);
         $user = User::find($id);
+
         if (!$user) {
             return response([
                 'message' => 'Unregistred User',
@@ -57,7 +59,7 @@ class GameController extends Controller
     public function showAllGamesFromUser($id)
     {
         $user_auth_id = Auth::id();
-        $user_auth = Auth::user();
+        $user_auth = User::find($user_auth_id);
         $user = User::find($id);
 
         if (!$user) {
@@ -93,7 +95,7 @@ class GameController extends Controller
         // A specific game cannot be deleted. 
         // Only a user's total execution log can be deleted.
         $user_auth_id = Auth::id();
-        $user_auth = Auth::user();
+        $user_auth = User::find($user_auth_id);
         $user = User::find($id);
 
         if (!$user) {
@@ -122,14 +124,14 @@ class GameController extends Controller
     {
         $fullSuccessRateRecord = DB::table('games')
             ->select(
-                'users.id as ID Player',
+                'users.id as IDPlayer',
                 'users.name as Player',
                 DB::raw('count(games.result) as Games'),
                 DB::raw('sum(games.result = 1) as Victories'),
                 DB::raw('concat(round(sum(games.result = 1)*100/count(games.result)),"%") as Success')
             )
             ->join('users', 'games.user_id', '=', 'users.id')
-            ->groupBy('ID Player', 'Player')
+            ->groupBy('IDPlayer', 'Player')
             ->orderBy('users.id')
             ->get();
         return  $fullSuccessRateRecord;
@@ -139,56 +141,65 @@ class GameController extends Controller
     {
         $ranking = DB::table('games')
             ->select(
-                'users.id as ID Player',
+                'users.id as IDPlayer',
                 'users.name as Player',
                 DB::raw('count(games.result) as Games'),
                 DB::raw('sum(games.result = 1) as Victories'),
                 DB::raw('round(sum(games.result = 1)*100/count(games.result)) as Success')
             )
             ->join('users', 'games.user_id', '=', 'users.id')
-            ->groupBy('ID Player', 'Player')
+            ->groupBy('IDPlayer', 'Player')
             ->orderByDesc('Success')
             ->orderByDesc('Games')
             ->orderBy('users.id')
             ->get();
 
-        return  $ranking;
+        return response([
+            'ranking' => $ranking,
+            'status' => 200,
+        ]);
     }
 
     public function loser()
     {
         $loser = DB::table('games')
             ->select(
-                'users.id as ID Player',
+                'users.id as IDPlayer',
                 'users.name as Player',
                 DB::raw('count(games.result) as Games'),
                 DB::raw('sum(games.result = 1) as Victories'),
                 DB::raw('round(sum(games.result = 1)*100/count(games.result)) as Success')
             )
             ->join('users', 'games.user_id', '=', 'users.id')
-            ->groupBy('ID Player', 'Player')
+            ->groupBy('IDPlayer', 'Player')
             ->orderBy('Success')
             ->orderByDesc('Games')
             ->first();
-        return  $loser;
+        return response([
+            'ranking' => $loser,
+            'status' => 200,
+        ]);
     }
 
     public function winner()
     {
         $winner = DB::table('games')
             ->select(
-                'users.id as ID Player',
+                'users.id as IDPlayer',
                 'users.name as Player',
                 DB::raw('count(games.result) as Games'),
                 DB::raw('sum(games.result = 1) as Victories'),
                 DB::raw('round(sum(games.result = 1)*100/count(games.result)) as Success')
             )
             ->join('users', 'games.user_id', '=', 'users.id')
-            ->groupBy('ID Player', 'Player')
+            ->groupBy('IDPlayer', 'Player')
             ->orderByDesc('Success')
             ->orderByDesc('Games')
             ->first();
-        return  $winner;
+        return response([
+            'ranking' => $winner,
+            'status' => 200,
+        ]);
     }
 
     public function successRate()
@@ -201,6 +212,10 @@ class GameController extends Controller
             )
             ->join('users', 'games.user_id', '=', 'users.id')
             ->get();
-        return  $successRate;
+
+        return response([
+            'ranking' => $successRate,
+            'status' => 200,
+        ]);
     }
 }

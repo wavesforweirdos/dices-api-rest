@@ -1,6 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import Navbar from './components/Nav.vue'
+
 </script>
 
 <template>
@@ -9,14 +11,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
     <div class="wrapper max-w-7xl mx-auto">
       <HelloWorld msg="Congrats!" />
-
-      <nav>
-        <RouterLink to="/login">Login</RouterLink>
-        <RouterLink to="/register">Sign in</RouterLink>
-        <RouterLink to="/game">Game</RouterLink>
-        <RouterLink to="/ranking">Ranking</RouterLink>
-        <RouterLink to="/stats">My stats</RouterLink>
-      </nav>
+      <Navbar />
     </div>
   </header>
 
@@ -34,31 +29,6 @@ header {
   margin: 0 auto 2rem;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
 @media (min-width: 1024px) {
   header {
     display: flex;
@@ -74,15 +44,6 @@ nav a:first-of-type {
     display: flex;
     place-items: flex-start;
     flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
   }
 }
 </style>

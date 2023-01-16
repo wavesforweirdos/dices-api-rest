@@ -10,17 +10,21 @@ import App from './App.vue';
 import router from './router';
 import axios from 'axios';
 
+
 //oruga
 import Oruga from '@oruga-ui/oruga-next'
 import '@oruga-ui/oruga-next/dist/oruga-full.css'
 
+//material design
+import '@mdi/font/css/materialdesignicons.min.css'
 
-
+axios.defaults.baseURL = 'http://localhost:8000/api/';
+axios.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready
  * to use in your application's views. An example is included for you.
- */
+*/
 
 const app = createApp(App);
 app.config.globalProperties.$axios = axios;
