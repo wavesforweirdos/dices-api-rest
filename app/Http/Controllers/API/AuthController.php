@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-class AuthUserController extends Controller
+class AuthController extends Controller
 {
     public function register(Request $request)
     {
@@ -78,34 +78,5 @@ class AuthUserController extends Controller
         ]);
     }
 
-    public function edit(Request $request, $id)
-    {
-        $user_auth_id = Auth::id();
-        $user_auth = Auth::user();
-        $user = User::find($id);
-
-        if (!$user) {
-            return response([
-                'message' => 'Unregistred User',
-                'status' => 404,
-            ]);
-        } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
-
-            $request->validate([
-                'name' => 'required|min:4|max:25|unique:users',
-            ]);
-
-            $user->update($request->all());
-            return response([
-                'user' => $user,
-                'message' => 'Successfully User Updated',
-                'status' => 200,
-            ]);
-        } else {
-            return response([
-                'message' => 'Sorry, you are not authorized to perform this action.',
-                'status' => 401,
-            ]);
-        }
-    }
+  
 }
