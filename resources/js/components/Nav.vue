@@ -1,27 +1,11 @@
 <template>
     <nav>
-        <template v-if="isLoggedIn">
-            <router-link :to="{ name: 'logout' }">Log out</router-link>
-            <router-link :to="{ name: 'game' }">Game</router-link>
-            <router-link :to="{ name: 'ranking' }">Ranking</router-link>
-            <!-- <RouterLink to="{ name: '/stats', params: { id: user.id} }">My stats</RouterLink> -->
-        </template>
-        <template v-else>
-            <router-link :to="{ name: 'login' }">Login</router-link>
-            <router-link :to="{ name: 'register' }">Sign in</router-link>
-        </template>
+        <router-link :to="{ name: 'game' }">Game</router-link>
+        <router-link :to="{ name: 'ranking' }">Ranking</router-link>
+        <router-link :to="{ name: 'logout' }">Log out</router-link>
+        <!-- <RouterLink to="{ name: '/stats', params: { id: user.id} }">My stats</RouterLink> -->
     </nav>
 </template> 
-
-<script>
-export default {
-    computed: {
-        isLoggedIn() {
-            return !!window.localStorage.getItem('authToken')
-        }
-    },
-};
-</script>
 
 <style scoped>
 nav {

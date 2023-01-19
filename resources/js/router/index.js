@@ -1,6 +1,4 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import HomeView from '../../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const auth = (to, from, next) => {
     if (localStorage.getItem("authToken")) {
@@ -21,7 +19,7 @@ const guest = (to, from, next) => {
 const routes = [{
         path: '/',
         name: 'home',
-        component: HomeView,
+        component: () => import('../../views/auth/LoginView.vue'),
     },
     {
         path: '/login',
@@ -60,9 +58,8 @@ const routes = [{
     // }
 ]
 
-const router = new VueRouter({
-    history: createWebHistory(
-        import.meta.env.BASE_URL),
+const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes
 })
 

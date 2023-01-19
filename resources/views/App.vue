@@ -1,15 +1,15 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from '../js/components/HomeMsg.vue'
-import Nav from '../js/components/Nav.vue'
+import HomeView from '../js/components/HomeMsg.vue'
+import NavBar from '../js/components/Nav.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
   <header>
     <img alt="DiceGame logo" class="logo" src="../assets/logo.svg" width="125" height="125" />
     <div class="wrapper max-w-7xl mx-auto">
-      <HelloWorld msg="Congrats!" />
-      <Nav></Nav>
+      <HomeView msg="Congrats!" />
+      <NavBar />
     </div>
   </header>
   <RouterView />

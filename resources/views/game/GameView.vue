@@ -12,7 +12,7 @@ import RouterLinkButton from "../../js/components/RouterLinkButton.vue";
             <img class="h-28" src="../../assets/faceDice/d2.svg" id="dice1">
             <img class="h-28" src="../../assets/faceDice/d5.svg" id="dice2">
           </div>
-          <RouterLinkButton btnText="Roll dices" color="emerald" url="/players/:id"></RouterLinkButton>
+          <RouterLinkButton btnText="Roll dices" color="emerald" url="/players/:id/games/"></RouterLinkButton>
         </div>
       </div>
     </div>

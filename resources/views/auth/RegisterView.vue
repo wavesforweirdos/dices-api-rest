@@ -6,7 +6,7 @@
           <div class="-space-y-px shadow-sm">
             <div>
               <label for="name" class="sr-only">Nickname</label>
-              <input v-model="user.name" id="name" name="name" type="text" required
+              <input v-model="user.name" id="name" name="name" type="text"
                 class="relative block w-full appearance-none  border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-emerald-500 focus:outline-none focus:ring-emerald-500 sm:text-sm rounded-t-md"
                 placeholder="Nickname" />
             </div>
@@ -29,10 +29,10 @@
                 class="relative block w-full appearance-none  border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-emerald-500 focus:outline-none focus:ring-emerald-500 sm:text-sm rounded-b-md"
                 placeholder="Password Confirmation" />
             </div>
-            <span v-if="error" class="px-2 py-4 sm:text-xs text-red-400 border-none">
-              {{ error }}
-            </span>
           </div>
+          <span v-if="error" class="px-2 py-6 sm:text-xs text-red-400 border-none">
+            {{ error }}
+          </span>
           <div class="mt-4 flex flex-col gap-4 items-center justify-center lg:flex-row lg:justify-between">
             <p class="text-sm text-gray-900">
               Already, have an account?
@@ -64,17 +64,16 @@ export default {
       }
     };
   },
-  name: 'Register',
+  name: 'register',
   methods: {
     register() {
-      this.$axios
-        .post('/players', this.user)
-        .then(
-          this.$router.push('/login')
-        )
-        .catch((e) => {
-          console.log(e);
-        });
+      this.$axios.post('/players', this.user)
+        .then(() => {
+          this.$router.push('/login');
+        })
+        .catch(error => {
+          this.error = error.response.data.message;
+        })
     }
   }
 }
