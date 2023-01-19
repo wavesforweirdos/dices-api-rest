@@ -1,24 +1,24 @@
 <template>
     <nav>
-        <RouterLink to="/login">Log in</RouterLink>
-        <RouterLink to="/register">Sign in</RouterLink>
-        <RouterLink to="/game">Game</RouterLink>
-        <RouterLink to="/ranking">Ranking</RouterLink>
-        <RouterLink to="{ name: '/stats', params: { id: user.id} }">My stats</RouterLink>
-        <button @click="Logout">Log out</button>
+        <template v-if="isLoggedIn">
+            <router-link :to="{ name: 'logout' }">Log out</router-link>
+            <router-link :to="{ name: 'game' }">Game</router-link>
+            <router-link :to="{ name: 'ranking' }">Ranking</router-link>
+            <!-- <RouterLink to="{ name: '/stats', params: { id: user.id} }">My stats</RouterLink> -->
+        </template>
+        <template v-else>
+            <router-link :to="{ name: 'login' }">Login</router-link>
+            <router-link :to="{ name: 'register' }">Sign in</router-link>
+        </template>
     </nav>
-</template>
+</template> 
 
 <script>
-import { useRouter } from 'vue-router';
 export default {
-    setup() {
-        const router = useRouter();
-        const Logout = () => {
-            localStorage.clear();
-            router.push({ path: '/login' });
-        };
-        return { Logout };
+    computed: {
+        isLoggedIn() {
+            return !!window.localStorage.getItem('authToken')
+        }
     },
 };
 </script>
@@ -35,11 +35,11 @@ nav a.router-link-exact-active {
     color: var(--color-text);
 }
 
-nav a.router-link-exact-active:hover{
+nav a.router-link-exact-active:hover {
     background-color: transparent;
 }
 
-nav a{
+nav a {
     display: inline-block;
     padding: 0 1rem;
     border-left: 1px solid var(--color-border);

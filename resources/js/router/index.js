@@ -1,40 +1,69 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 import HomeView from '../../views/HomeView.vue'
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('../../views/auth/LoginView.vue')
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('../../views/auth/RegisterView.vue')
-    },
-    {
-      path: '/game',
-      name: 'game',
-      component: () => import('../../views/game/GameView.vue')
-    },
-    {
-      path: '/ranking',
-      name: 'ranking',
-      component: () => import('../../views/game/RankingView.vue')
-    },
-    {
-      path: '/stats/:id',
-      name: 'stats',
-      component: () => import('../../views/game/StatsView.vue')
+const auth = (to, from, next) => {
+    if (localStorage.getItem("authToken")) {
+        return next();
+    } else {
+        return next("/login");
     }
-  ]
+};
+
+const guest = (to, from, next) => {
+    if (!localStorage.getItem("authToken")) {
+        return next();
+    } else {
+        return next("/game");
+    }
+};
+
+const routes = [{
+        path: '/',
+        name: 'home',
+        component: HomeView,
+    },
+    {
+        path: '/login',
+        name: 'login',
+        beforeEnter: guest,
+        component: () => import('../../views/auth/LoginView.vue'),
+    },
+    {
+        path: '/register',
+        name: 'register',
+        beforeEnter: guest,
+        component: () => import('../../views/auth/RegisterView.vue'),
+    },
+    {
+        path: '/logout',
+        name: 'logout',
+        beforeEnter: auth,
+        component: () => import('../../views/auth/LogoutView.vue'),
+    },
+    {
+        path: '/game',
+        name: 'game',
+        beforeEnter: auth,
+        component: () => import('../../views/game/GameView.vue'),
+    },
+    {
+        path: '/ranking',
+        name: 'ranking',
+        beforeEnter: auth,
+        component: () => import('../../views/game/RankingView.vue'),
+    },
+    // {
+    //   path: '/stats/:id',
+    //   name: 'stats',
+    //   component: () => import('../../views/game/StatsView.vue')
+    // }
+]
+
+const router = new VueRouter({
+    history: createWebHistory(
+        import.meta.env.BASE_URL),
+    routes
 })
 
 export default router

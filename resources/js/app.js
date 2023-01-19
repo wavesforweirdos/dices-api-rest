@@ -6,34 +6,28 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
-import App from './App.vue';
+import App from '../views/App.vue';
 import router from './router';
 import axios from 'axios';
-
-
-//oruga
-import Oruga from '@oruga-ui/oruga-next'
-import '@oruga-ui/oruga-next/dist/oruga-full.css'
 
 //material design
 import '@mdi/font/css/materialdesignicons.min.css'
 
-axios.defaults.baseURL = 'http://localhost:8000/api/';
-axios.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready
  * to use in your application's views. An example is included for you.
-*/
+ */
+
 
 const app = createApp(App);
+
 app.config.globalProperties.$axios = axios;
 window.axios = axios;
+window.axios.defaults.baseURL = 'http://localhost:8000/api/';
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers['Authorization'] = `Bearer  ${localStorage.getItem('authToken')}`;
 
-app.use(Oruga);
-
-// import ExampleComponent from './components/ExampleComponent.vue';
-// app.component('example-component', ExampleComponent);
 
 /**
  * The following block of code may be used to automatically register your
@@ -55,3 +49,5 @@ Object.entries(import.meta.glob('./**/*.vue', { eager: true })).forEach(([path, 
 
 app.use(router)
 app.mount('#app');
+
+cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER

@@ -1,9 +1,8 @@
-<script setup>
-import TheWelcome from '../js/components/TheWelcome.vue'
-</script>
-
 <template>
   <main>
-    <TheWelcome /> 
+    <div class="flex justify-center">
+      <img src="../assets/DiceGame.gif">
+      <img src="../assets/DiceGame2.gif">
+    </div>
   </main>
 </template>
