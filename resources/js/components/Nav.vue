@@ -1,12 +1,30 @@
 <template>
     <nav>
-        <router-link :to="{ name: 'game' }">Game</router-link>
-        <router-link :to="{ name: 'ranking' }">Ranking</router-link>
-        <router-link :to="{ name: 'logout' }">Log out</router-link>
-        <!-- <RouterLink to="{ name: '/stats', params: { id: user.id} }">My stats</RouterLink> -->
+        <div v-if="!isLoggedIn">
+            <router-link :to="{ name: 'home' }">Login</router-link>
+            <router-link :to="{ name: 'register' }">Sign in</router-link>
+        </div>
+        <div v-else>
+            <router-link :to="{ name: 'game' }">¡Play!</router-link>
+            <router-link :to="{ name: 'throws', params: { id: idUser } }">Throws</router-link>
+            <router-link :to="{ name: 'ranking' }">Ranking</router-link>
+            <router-link class="text-emerald-700 opacity-30" :to="{ name: 'logout' }">Log out</router-link>
+        </div>
     </nav>
 </template> 
 
+<script>
+export default {
+    data() {
+        return {
+            idUser: localStorage.getItem('idUser'),
+        }
+    },
+    computed : {
+      isLoggedIn : function(){ return localStorage.getItem('idUser')}
+    }
+}
+</script>
 <style scoped>
 nav {
     width: 100%;

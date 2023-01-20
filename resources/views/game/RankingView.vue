@@ -17,7 +17,7 @@
 import axios from "axios";
 import { isProxy, toRaw } from 'vue';
 import { defineComponent, ref } from 'vue'
-import Table from '../../js/components/Table.vue'
+import Table from '../../js/components/TableRanking.vue'
 
 export default defineComponent({
   components: {

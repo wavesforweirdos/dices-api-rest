@@ -7,7 +7,7 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <!-- loop through each value of the fields to get the table header -->
-                                <th v-for="field in fields" :key='field' @click="sortTable(field)"
+                                <th v-for="field in fields" :key='field'
                                     class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                     scope="col">
                                     {{ field }}
@@ -19,7 +19,7 @@
                             <tr v-for="item in tableData" :key='item'>
                                 <td v-for="field in fields" :key='field'
                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
-                                    <span :id='field'>{{ item[field] }}<span id="rate" class="hidden">%</span> </span>
+                                    <span :id='field'>{{ item[field] }}<span id="winGame" class="hidden"></span> </span>
                                 </td>
                             </tr>
                         </tbody>

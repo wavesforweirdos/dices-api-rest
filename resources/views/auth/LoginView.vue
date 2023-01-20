@@ -61,9 +61,10 @@ export default {
         .then((response) => {
           if (response.data.access_token) {
             localStorage.setItem('authToken', response.data.access_token);
-            localStorage.setItem('user', response.data.user);
+            localStorage.setItem('idUser', response.data.user.id);
             axios.defaults.headers['Authorization'] = `Bearer  ${localStorage.getItem('authToken')}`;
-            this.$router.push('/game');
+            location.reload();
+            this.$router.push('/index');
           } else {
             this.error = response.data.message
           }

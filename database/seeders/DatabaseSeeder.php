@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-        Game::factory(20)->create();
+        Game::factory(50)->create();
 
     }
 }

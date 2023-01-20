@@ -4,13 +4,14 @@
     <div class="px-4 sm:px-6 lg:px-8 sm:pt-8">
       <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto text-center lg:text-left">
-          <h1 class="text-xl font-semibold text-emerald-900">My stats</h1>
-          <p class="mt-2 text-sm text-gray-700">The ranking of succed</p>
+          <h1 class="text-xl font-semibold text-emerald-900">Last throws user</h1>
+          <p class="mt-2 text-sm text-gray-700">My last throws order by date</p>
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <button type="button"
-            class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Add
-            user</button>
+          <router-link to="/delete"></router-link>
+          <a href="" @click="delete"
+            class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Delete
+            data</a>
         </div>
       </div>
       <!-- The table component -->
@@ -24,7 +25,7 @@
 import axios from "axios";
 import { isProxy, toRaw } from 'vue';
 import { defineComponent, ref } from 'vue'
-import Table from '../../js/components/Table.vue'
+import Table from '../../js/components/TableThrows.vue'
 
 export default defineComponent({
   components: {
@@ -34,13 +35,13 @@ export default defineComponent({
     return {
       games: [],
       loading: true,
-      fields: ['Victories', 'Games']
+      fields: ['created_at', 'dice1', 'dice2', 'result']
     };
   },
   async mounted() {
-    axios.get('/players/:id/games')
+    axios.get('/players/' + localStorage.getItem('idUser') + '/games')
       .then((res) => {
-        this.games = res.data.ranking
+        this.games = res.data.games
         if (isProxy(this.games)) {
           this.games = toRaw(this.games)
         }
@@ -48,7 +49,18 @@ export default defineComponent({
       }).catch(err => {
         this.games = []
       })
-  }
+  },
+  methods: {
+    delete() {
+      axios.delete('/players/' + localStorage.getItem('idUser') + '/games', localStorage.getItem('idUser'))
+        .then((response) => {
+          console.log(response)
+        })
+        .catch(error => {
+          this.error = error.response.data.message;
+        })
+    }
+  },
 });
 </script>
 
@@ -62,7 +74,7 @@ i {
   color: rgb(17 24 39);
 }
 
-#Success {
+#result {
   display: inline-flex;
   border-radius: 9999px;
   background-color: rgb(209 250 229);
@@ -80,7 +92,7 @@ i {
   color: rgb(6 95 70);
 }
 
-#Success>#rate {
+#result>#winGame {
   display: block
 }
 </style>

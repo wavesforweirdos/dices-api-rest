@@ -1,4 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {
+    createRouter,
+    createWebHistory
+} from 'vue-router'
 
 const auth = (to, from, next) => {
     if (localStorage.getItem("authToken")) {
@@ -12,18 +15,13 @@ const guest = (to, from, next) => {
     if (!localStorage.getItem("authToken")) {
         return next();
     } else {
-        return next("/game");
+        return next("/index");
     }
 };
 
 const routes = [{
         path: '/',
         name: 'home',
-        component: () => import('../../views/auth/LoginView.vue'),
-    },
-    {
-        path: '/login',
-        name: 'login',
         beforeEnter: guest,
         component: () => import('../../views/auth/LoginView.vue'),
     },
@@ -40,10 +38,21 @@ const routes = [{
         component: () => import('../../views/auth/LogoutView.vue'),
     },
     {
+        path: '/index',
+        name: 'index',
+        component: () => import('../../views/game/IndexView.vue'),
+    },
+    {
         path: '/game',
         name: 'game',
         beforeEnter: auth,
         component: () => import('../../views/game/GameView.vue'),
+    },
+    {
+        path: '/user/:id/throws/',
+        name: 'throws',
+        beforeEnter: auth,
+        component: () => import('../../views/game/ThrowsView.vue'),
     },
     {
         path: '/ranking',
@@ -51,15 +60,15 @@ const routes = [{
         beforeEnter: auth,
         component: () => import('../../views/game/RankingView.vue'),
     },
-    // {
-    //   path: '/stats/:id',
-    //   name: 'stats',
-    //   component: () => import('../../views/game/StatsView.vue')
-    // }
+    {
+        path: "/:pathMatch(.*)*",
+        component: () => import('../components/NotFound.vue')
+    }
 ]
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHistory(
+        import.meta.env.BASE_URL),
     routes
 })
 
