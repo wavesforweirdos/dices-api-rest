@@ -4,14 +4,13 @@
     <div class="px-4 sm:px-6 lg:px-8 sm:pt-8">
       <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto text-center lg:text-left">
-          <h1 class="text-xl font-semibold text-emerald-900">Last throws user</h1>
-          <p class="mt-2 text-sm text-gray-700">My last throws order by date</p>
+          <h1 class="text-xl font-semibold text-emerald-900">My throws</h1>
+          <p class="mt-2 text-sm text-gray-700">Last throws order by date</p>
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <router-link to="/delete"></router-link>
-          <a href="" @click="delete"
+          <button @click="deleteData"
             class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Delete
-            data</a>
+            data</button>
         </div>
       </div>
       <!-- The table component -->
@@ -33,34 +32,36 @@ export default defineComponent({
   },
   data() {
     return {
+      idUser: localStorage.getItem('idUser'),
       games: [],
       loading: true,
       fields: ['created_at', 'dice1', 'dice2', 'result']
     };
   },
-  async mounted() {
-    axios.get('/players/' + localStorage.getItem('idUser') + '/games')
-      .then((res) => {
-        this.games = res.data.games
-        if (isProxy(this.games)) {
-          this.games = toRaw(this.games)
-        }
-        this.loading = false
-      }).catch(err => {
-        this.games = []
-      })
-  },
   methods: {
-    delete() {
-      axios.delete('/players/' + localStorage.getItem('idUser') + '/games', localStorage.getItem('idUser'))
-        .then((response) => {
-          console.log(response)
+    getData() {
+      axios.get('/players/' + this.idUser + '/games')
+        .then((res) => {
+          this.games = res.data.games
+          if (isProxy(this.games)) {
+            this.games = toRaw(this.games)
+          }
+          this.loading = false
+        }).catch(err => {
+          this.games = []
         })
-        .catch(error => {
-          this.error = error.response.data.message;
-        })
+    },
+    deleteData() {
+      axios.delete('/players/' + this.idUser + '/games')
+        .then(
+          this.$router.push('/game')
+        )
+        .catch(err => { console.error(err) })
     }
   },
+  mounted() {
+    this.getData();
+  }
 });
 </script>
 
