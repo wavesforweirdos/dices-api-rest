@@ -50,4 +50,4 @@ Object.entries(import.meta.glob('./**/*.vue', { eager: true })).forEach(([path, 
 app.use(router)
 app.mount('#app');
 
-cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER
+// cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER
