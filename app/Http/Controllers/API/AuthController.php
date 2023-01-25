@@ -35,6 +35,12 @@ class AuthController extends Controller
                 'password' => 'required|confirmed',
                 'password_confirmation' => 'required'
             ]);
+            $validatedData = $request->validate([
+                'name' => 'required|max:25|unique:users,name',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|confirmed',
+                'password_confirmation' => 'required'
+            ]);
         };
 
         if ($validator->fails()) {
