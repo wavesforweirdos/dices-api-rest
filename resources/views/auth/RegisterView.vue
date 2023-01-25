@@ -36,7 +36,7 @@
           <div class="mt-4 flex flex-col gap-4 items-center justify-center lg:flex-row lg:justify-between">
             <p class="text-sm text-gray-900">
               Already, have an account?
-              <router-link to="login" class="text-emerald-500 no-underline hover:underline">
+              <router-link to="/" class="text-emerald-500 no-underline hover:underline">
                 Login
               </router-link>
             </p>
