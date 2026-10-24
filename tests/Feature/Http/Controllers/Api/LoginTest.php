@@ -26,8 +26,8 @@ class LoginTest extends TestCase
 
         $response = $this->post(route('login'), []);
 
-        $response->assertStatus(302); //302 redirección
-        $response->assertSessionHasErrors(['password', 'email']); //error de validación en password y mail
+        $response->assertStatus(422); //422: datos no válidos
+        $response->assertJsonStructure(['errors' => ['password', 'email']]); //error de validación en password y mail
     }
 
 

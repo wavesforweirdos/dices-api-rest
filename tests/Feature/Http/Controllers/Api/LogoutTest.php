@@ -15,7 +15,7 @@ class LogoutTest extends TestCase
      *
      * @return void
      */
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     /** @test */
 

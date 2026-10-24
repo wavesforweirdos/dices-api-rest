@@ -1,66 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Dice Game API
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> A dice game with a REST API in Laravel and a Vue single-page client. You roll two dice and win when they add up to 7. Built in 2022-2023 as a Full Stack PHP bootcamp project (IT Academy), tidied up in 2026.
 
-## About Laravel
+[![CI](https://github.com/wavesforweirdos/dices-api-rest/actions/workflows/ci.yml/badge.svg)](https://github.com/wavesforweirdos/dices-api-rest/actions/workflows/ci.yml)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![The game: two dice and the roll button](docs/game.jpg)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Register and log in with a name (optional, `Anonymous` by default), email and password. Access is by personal access token ([Laravel Passport](https://laravel.com/docs/passport))
+- Two roles with [spatie/laravel-permission](https://spatie.be/docs/laravel-permission): **Player** and **Admin**. A player can only see, rename and clear their own throws; an admin can do it for anyone and also sees the global statistics
+- Roll the dice (`dice1 + dice2 = 7` is a win), see your throw history and delete it (single throws can't be deleted, only the whole history)
+- Ranking of all players by success rate, plus the best and the worst player
+- A Vue 3 client with vue-router, Vuex, Tailwind and Bootstrap, served by Laravel
+- Throws are broadcast through Laravel Echo / Pusher (optional: `BROADCAST_DRIVER=log` in development)
+- Responses use the HTTP status they report in the body (`401` for a forbidden action, `422` for invalid data)
+- 35 feature and unit tests, run in CI on SQLite, and a Postman collection
 
-## Learning Laravel
+| Ranking | On a phone |
+|---|---|
+| ![Ranking of players](docs/ranking.jpg) | ![The game on a phone](docs/game-mobile.jpg) |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## API
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Everything lives under `/api`. All routes except register and login need `Authorization: Bearer <token>`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Method | Route | Who | What |
+|---|---|---|---|
+| `POST` | `/players` | anyone | Register a player; returns the user and an access token |
+| `POST` | `/login` | anyone | Log in; returns the user and an access token |
+| `POST` | `/logout` | player | Revoke the player's tokens |
+| `PUT` | `/players/{id}` | owner, admin | Change a player's name |
+| `POST` | `/players/{id}/games` | owner, admin | Roll the dice |
+| `GET` | `/players/{id}/games` | owner, admin | List a player's throws |
+| `DELETE` | `/players/{id}/games` | owner, admin | Delete all of a player's throws |
+| `GET` | `/players/ranking` | any user | Success rate of every player |
+| `GET` | `/players/ranking/winner` | any user | Player with the best rate |
+| `GET` | `/players/ranking/loser` | any user | Player with the worst rate |
+| `GET` | `/players` | admin | Every player with their games and success |
+| `GET` | `/players/successRate` | admin | Average success rate of the whole game |
 
-## Laravel Sponsors
+The Postman collection is in [`postman/`](postman/dices-api-rest.postman_collection.json): create a `token` variable (or paste a token from `/login`) before calling the protected routes.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Technologies
 
-### Premium Partners
+| | |
+|---|---|
+| **Back end** | PHP 8, [Laravel 9](https://laravel.com/), [Passport](https://laravel.com/docs/passport), [spatie/laravel-permission](https://spatie.be/docs/laravel-permission), MySQL |
+| **Front end** | [Vue 3](https://vuejs.org/), vue-router, Vuex, Oruga UI, [Tailwind](https://tailwindcss.com/), Bootstrap, [Vite](https://vite.dev/) |
+| **Real time** | Laravel Echo and [Pusher](https://pusher.com/) |
+| **Quality** | PHPUnit (35 tests), GitHub Actions |
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Getting started
 
-## Contributing
+You need PHP 8.0+, Composer, Node 18+ and a MySQL database.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```sh
+git clone https://github.com/wavesforweirdos/dices-api-rest
+cd dices-api-rest
+composer install
+npm install
 
-## Code of Conduct
+cp .env.example .env
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Edit `.env` with your database (`DB_*`) and, only if you want live broadcasting, your Pusher keys (`PUSHER_APP_*` and `BROADCAST_DRIVER=pusher`). Then:
 
-## Security Vulnerabilities
+```sh
+php artisan migrate --seed      # tables, roles, an admin and ten players
+php artisan passport:install    # keys and the clients for the tokens
+php artisan serve               # API and client on http://localhost:8000
+npm run dev                     # Vite with hot reload (or `npm run build`)
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+The seeder creates the admin `test@example.com` with the password `123456789`; change it if you ever publish the app.
 
-## License
+The client calls `http://localhost:8000/api/` by default; set `VITE_API_URL` to point it somewhere else.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Tests
+
+```sh
+vendor/bin/phpunit
+```
+
+`phpunit.xml` runs the tests on an in-memory SQLite database, so no MySQL server is needed.
+
+| Script | Description |
+|---|---|
+| `npm run dev` | Vite dev server |
+| `npm run build` | Production build into `public/build/` |
+
+## Deployment
+
+It needs a PHP host with a database, so it can't run on static hosting like GitHub Pages. Build the client (`npm run build`), set the production `.env` (`APP_ENV=production`, `APP_DEBUG=false`, `APP_URL` and database values) and run `php artisan migrate --force` and `php artisan passport:install`.
+
+## Project layout
+
+```
+app/Http/Controllers/API/   Auth, Game and User controllers
+app/Listeners/              CalculateRoll: decides win or loss
+app/Models/                 User and Game
+database/                   migrations, factories and seeders (roles included)
+resources/js, views/        Vue client
+routes/api.php              the routes above
+tests/                      feature and unit tests
+```

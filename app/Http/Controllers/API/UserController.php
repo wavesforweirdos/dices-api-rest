@@ -25,7 +25,7 @@ class UserController extends Controller
             return response([
                 'message' => 'Unregistred User',
                 'status' => 404,
-            ]);
+            ], 404);
         } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
             $games = $user->games;
             $countGames = count($games);
@@ -33,19 +33,19 @@ class UserController extends Controller
                 return response([
                     'message' => 'The user ' . $user->name . ' has not played yet.',
                     'status' => 200,
-                ]);
+                ], 200);
             } else {
                 return response([
                     'games' => $games,
                     'message' => 'Retrieved Succesfully',
                     'status' => 200,
-                ]);
+                ], 200);
             }
         } else {
             return response([
                 'message' => 'Sorry, you are not authorized to perform this action.',
                 'status' => 401,
-            ]);
+            ], 401);
         }
     }
 
@@ -67,7 +67,7 @@ class UserController extends Controller
             return response([
                 'message' => 'Unregistred User',
                 'status' => 404,
-            ]);
+            ], 404);
         } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
 
             $request->validate([
@@ -79,12 +79,12 @@ class UserController extends Controller
                 'user' => $user,
                 'message' => 'Successfully User Updated',
                 'status' => 200,
-            ]);
+            ], 200);
         } else {
             return response([
                 'message' => 'Sorry, you are not authorized to perform this action.',
                 'status' => 401,
-            ]);
+            ], 401);
         }
     }
 
@@ -106,7 +106,7 @@ class UserController extends Controller
             return response([
                 'message' => 'Unregistred User',
                 'status' => 404,
-            ]);
+            ], 404);
         } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
             $allGamesFromUser = $user->games();
             $allGamesFromUser->delete();
@@ -115,12 +115,12 @@ class UserController extends Controller
                 'game' => 0,
                 'message' => 'All Data Deleted From The User ' . ucfirst($user->name),
                 'status' => 200,
-            ]);
+            ], 200);
         } else {
             return response([
                 'message' => 'Sorry, you are not authorized to perform this action.',
                 'status' => 401,
-            ]);
+            ], 401);
         }
     }
 }

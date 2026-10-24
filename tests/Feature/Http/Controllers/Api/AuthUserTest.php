@@ -98,7 +98,7 @@ class AuthUserTest extends TestCase
 
         $this->assertAuthenticatedAs($user2);
         $this->assertDatabaseMissing('users', ['name' => 'test3']);
-        $response->assertOk();
+        $response->assertStatus(401);
     }
 
     /** @test */

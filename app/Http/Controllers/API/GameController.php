@@ -29,7 +29,7 @@ class GameController extends Controller
             return response([
                 'message' => 'Unregistred User',
                 'status' => 404,
-            ]);
+            ], 404);
         } elseif ($user_auth_id == $id || $user_auth->hasRole('Admin')) {
 
             $dice1 = rand(1, 6);
@@ -47,12 +47,12 @@ class GameController extends Controller
                 'game' => new GameResource($game),
                 'message' => 'Well played!',
                 'status' => 200,
-            ]);
+            ], 200);
         } else {
             return response([
                 'message' => 'Sorry, you are not authorized to perform this action.',
                 'status' => 401,
-            ]);
+            ], 401);
         }
     }
 
@@ -93,7 +93,7 @@ class GameController extends Controller
         return response([
             'ranking' => $ranking,
             'status' => 200,
-        ]);
+        ], 200);
     }
 
     public function loser()
@@ -114,7 +114,7 @@ class GameController extends Controller
         return response([
             'ranking' => $loser,
             'status' => 200,
-        ]);
+        ], 200);
     }
 
     public function winner()
@@ -135,7 +135,7 @@ class GameController extends Controller
         return response([
             'ranking' => $winner,
             'status' => 200,
-        ]);
+        ], 200);
     }
 
     public function successRate()
@@ -152,6 +152,6 @@ class GameController extends Controller
         return response([
             'ranking' => $successRate,
             'status' => 200,
-        ]);
+        ], 200);
     }
 }

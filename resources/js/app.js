@@ -24,7 +24,7 @@ const app = createApp(App);
 
 app.config.globalProperties.$axios = axios;
 window.axios = axios;
-window.axios.defaults.baseURL = 'http://localhost:8000/api/';
+window.axios.defaults.baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api/';
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers['Authorization'] = `Bearer  ${localStorage.getItem('authToken')}`;
 

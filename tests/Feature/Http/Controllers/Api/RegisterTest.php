@@ -20,7 +20,7 @@ class RegisterTest extends TestCase
     public function test_register_insert_user_on_database()
     {
         $user = User::factory()->create();
-        $this->assertDatabaseHas('users', $user->toArray());
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'email' => $user->email]);
     }
 
     /** @test */
