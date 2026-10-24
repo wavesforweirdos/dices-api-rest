@@ -14,6 +14,7 @@ class ExampleTest extends TestCase
      */
     public function test_the_application_returns_a_successful_response()
     {
+        $this->withoutVite(); // la vista carga el bundle de Vite, que no hace falta compilar para probar la ruta
         $response = $this->get('/');
 
         $response->assertStatus(200);

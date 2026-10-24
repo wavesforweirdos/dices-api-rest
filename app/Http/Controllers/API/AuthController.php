@@ -47,7 +47,7 @@ class AuthController extends Controller
             return response([
                 'errors' => $validator->errors(),
                 'status' => 422
-            ]);
+            ], 422);
         }
 
         $validatedData['password'] = Hash::make($request->password);
@@ -73,14 +73,14 @@ class AuthController extends Controller
             return response([
                 'errors' => $validator->errors(),
                 'status' => 422
-            ]);
+            ], 422);
         } else {
             if (!auth()->attempt($loginData)) {
                 //las credenciales son incorrectas o no existen
                 return response([
                     'message' => 'Invalid Credentials',
                     'status' => 401
-                ]);
+                ], 401);
             } else {
                 //generamos el token de acceso
                 $user = $request->user();
@@ -91,7 +91,7 @@ class AuthController extends Controller
                     'user' => Auth::user(),
                     'access_token' => $accessToken,
                     'status' => 200
-                ]);
+                ], 200);
             };
         }
     }
@@ -104,6 +104,6 @@ class AuthController extends Controller
             'user' => Auth::user(),
             'message' => 'Successfully Logged',
             'status' => 200
-        ]);
+        ], 200);
     }
 }
