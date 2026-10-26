@@ -24,6 +24,8 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
+          php artisan passport:keys
+          # Passport firma los tokens con estas claves (storage/oauth-*.key, fuera de git)
 
       # phpunit.xml usa SQLite en memoria: no hace falta un servidor MySQL
       - name: Run the tests
