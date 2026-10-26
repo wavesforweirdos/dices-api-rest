@@ -27,7 +27,7 @@ class RegisterTest extends TestCase
     public function test_register_creates_and_authenticates_a_user()
     {
         // solicitud POST al registro de usuario con datos válidos
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $name = $this->faker->name;
         $email = $this->faker->safeEmail;
@@ -49,14 +49,14 @@ class RegisterTest extends TestCase
     {
         // solicitud POST al registro de usuario con validación de errores
         $response = $this->post(route('register'), []);
-        $response->assertStatus(302);
+        $response->assertStatus(422);
     }
 
     /** @test */
     public function test_register_user_with_empty_password()
     {
         // solicitud POST al registro de usuario con campo de password vacío
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $user = [
             'name' => 'test',
             'email' => 'test@example.com',
@@ -71,7 +71,7 @@ class RegisterTest extends TestCase
     public function test_register_user_with_wrong_password_confirmation()
     {
         // solicitud POST al registro de usuario con campo de password_confirmation distinto a password
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $user = [
             'name' => 'test',
             'email' => 'test@example.com',
@@ -86,7 +86,7 @@ class RegisterTest extends TestCase
     public function test_register_user_with_empty_name_return_an_anonymous_user()
     {
         // solicitud POST al registro de usuario con campo de nombre vacío
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $user = [
             'name' => '',
             'email' => 'test@example.com',

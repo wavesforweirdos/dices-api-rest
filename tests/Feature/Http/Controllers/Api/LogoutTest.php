@@ -21,7 +21,7 @@ class LogoutTest extends TestCase
 
     public function test_auth_user_can_logout()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $user = User::factory()->create();
         Passport::actingAs($user);
         

@@ -1,6 +1,6 @@
 # Dice Game API
 
-> A dice game with a REST API in Laravel and a Vue single-page client. You roll two dice and win when they add up to 7. Built in 2022-2023 as a Full Stack PHP bootcamp project (IT Academy), tidied up in 2026.
+> A dice game with a REST API in Laravel and a Vue single-page client. You roll two dice and win when they add up to 7. Built in 2022-2023 as a Full Stack PHP bootcamp project (IT Academy); in 2026 it was tidied up and moved from Laravel 9 to Laravel 13 to run on current PHP.
 
 [![CI](https://github.com/wavesforweirdos/dices-api-rest/actions/workflows/ci.yml/badge.svg)](https://github.com/wavesforweirdos/dices-api-rest/actions/workflows/ci.yml)
 
@@ -46,14 +46,14 @@ The Postman collection is in [`postman/`](postman/dices-api-rest.postman_collect
 
 | | |
 |---|---|
-| **Back end** | PHP 8, [Laravel 9](https://laravel.com/), [Passport](https://laravel.com/docs/passport), [spatie/laravel-permission](https://spatie.be/docs/laravel-permission), MySQL |
+| **Back end** | PHP 8.3+, [Laravel 13](https://laravel.com/), [Passport](https://laravel.com/docs/passport), [spatie/laravel-permission](https://spatie.be/docs/laravel-permission), MySQL |
 | **Front end** | [Vue 3](https://vuejs.org/), vue-router, Vuex, Oruga UI, [Tailwind](https://tailwindcss.com/), Bootstrap, [Vite](https://vite.dev/) |
 | **Real time** | Laravel Echo and [Pusher](https://pusher.com/) |
-| **Quality** | PHPUnit (35 tests), GitHub Actions |
+| **Quality** | PHPUnit 12 (35 tests), GitHub Actions |
 
 ## Getting started
 
-You need PHP 8.0+, Composer, Node 18+ and a MySQL database.
+You need PHP 8.3+ (it runs on 8.5, with the `sodium` extension enabled), Composer, Node 20+ and a MySQL database.
 
 ```sh
 git clone https://github.com/wavesforweirdos/dices-api-rest
@@ -69,7 +69,8 @@ Edit `.env` with your database (`DB_*`) and, only if you want live broadcasting,
 
 ```sh
 php artisan migrate --seed      # tables, roles, an admin and ten players
-php artisan passport:install    # keys and the clients for the tokens
+php artisan passport:keys       # keys to sign the tokens
+php artisan passport:client --personal --name="Dice Game Personal Access Client" --provider=users
 php artisan serve               # API and client on http://localhost:8000
 npm run dev                     # Vite with hot reload (or `npm run build`)
 ```

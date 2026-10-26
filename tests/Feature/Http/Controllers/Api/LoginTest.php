@@ -36,7 +36,7 @@ class LoginTest extends TestCase
     {
         //al realizar una solicitud POST a la url login con credenciales válidas, el usuario es autentificado y la respuesta es OK
 
-        $this->artisan('passport:install'); // crear personal access client
+        $this->createPassportClients(); // crear personal access client
 
         $user = User::factory()->create();
         $response = $this->post(route('login'), [

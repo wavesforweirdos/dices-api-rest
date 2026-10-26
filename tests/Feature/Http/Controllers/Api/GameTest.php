@@ -24,25 +24,25 @@ class GameTest extends TestCase
         parent::setUp();
 
         $this->artisan("db:seed", ['--class' => 'RoleSeeder']);
-        $this->app->make(PermissionRegistrar::class)->registerPermissions();
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
     /** @test */
     public function test_unauth_user_cant_play()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user = User::factory()->create();
 
         $response = $this->post(
             route('throw', $user->id)
-        )->assertRedirect(route('login'));
+        )->assertUnauthorized();
     }
 
     /** @test */
     public function test_auth_user_can_play_with_own_id()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user = User::factory()->create();
         Passport::actingAs($user);
@@ -59,7 +59,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_auth_user_cant_play_with_other_id()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user1 = User::factory()->create();
         Passport::actingAs($user1);
@@ -77,7 +77,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_auth_user_can_show_all_his_games()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user = User::factory()->create();
         Passport::actingAs($user);
@@ -90,7 +90,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_auth_user_cant_show_games_of_other_users()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user1 = User::factory()->create()->assignRole('Player');
         $user2 = User::factory()
@@ -107,7 +107,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_admin_user_can_show_games_of_other_users()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $admin = User::factory()->create()->assignRole('Admin');
         $user = User::factory()
@@ -124,7 +124,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_auth_user_can_destroy_all_his_games()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user = User::factory()
             ->has(Game::factory()->count(5))
@@ -139,7 +139,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_auth_user_cant_destroy_games_of_other_users()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user1 = User::factory()->create()->assignRole('Player');
         $user2 = User::factory()
@@ -156,7 +156,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_admin_user_can_destroy_games_of_other_users()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $admin = User::factory()->create()->assignRole('Admin');
         $user = User::factory()
@@ -173,17 +173,17 @@ class GameTest extends TestCase
     /** @test */
     public function test_unauth_user_cant_show_full_success_rate_record()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $response = $this->get(
             route('admin.fullSuccessRateRecord')
-        )->assertRedirect(route('login'));
+        )->assertUnauthorized();
     }
 
     /** @test */
     public function test_auth_user_cant_show_full_success_rate_record()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $user = User::factory()->create()->assignRole('Player');
         Passport::actingAs($user);
 
@@ -195,7 +195,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_admin_can_show_full_success_rate_record()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $admin = User::factory()->create()->assignRole('Admin');
         Passport::actingAs($admin);
 
@@ -215,13 +215,13 @@ class GameTest extends TestCase
 
         $this->assertGuest($guard = null); // Comprueba que el usuario no está autenticado.
 
-        $response->assertRedirect(route('login'));
+        $response->assertUnauthorized();
     }
 
     /** @test */
     public function test_auth_user_can_get_ranking()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $user = User::factory()->create();
         Passport::actingAs($user);
 
@@ -244,13 +244,13 @@ class GameTest extends TestCase
 
         $this->assertGuest($guard = null); // Comprueba que el usuario no está autenticado.
 
-        $response->assertRedirect(route('login'));
+        $response->assertUnauthorized();
     }
 
     /** @test */
     public function test_auth_user_can_get_winner()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $user = User::factory()->create();
         Passport::actingAs($user);
 
@@ -273,13 +273,13 @@ class GameTest extends TestCase
 
         $this->assertGuest($guard = null); // Comprueba que el usuario no está autenticado.
 
-        $response->assertRedirect(route('login'));
+        $response->assertUnauthorized();
     }
 
     /** @test */
     public function test_auth_user_can_get_loser()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $user = User::factory()->create();
         Passport::actingAs($user);
 
@@ -294,7 +294,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_auth_user_cant_show_success_rate()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $user = User::factory()->create()->assignRole('Player');
         Passport::actingAs($user);
 
@@ -306,7 +306,7 @@ class GameTest extends TestCase
     /** @test */
     public function test_admin_can_show_success_rate()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
         $admin = User::factory()->create()->assignRole('Admin');
         Passport::actingAs($admin);
 
