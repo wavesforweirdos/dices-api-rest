@@ -13,8 +13,8 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          extensions: mbstring, pdo_sqlite, sqlite3
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite, sqlite3, sodium
           coverage: none
 
       - name: Install PHP dependencies

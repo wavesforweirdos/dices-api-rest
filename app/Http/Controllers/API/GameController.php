@@ -8,15 +8,20 @@ use App\Models\User;
 use App\Models\Game;
 use App\Http\Resources\GameResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 
 
-class GameController extends Controller
+class GameController extends Controller implements HasMiddleware
 {
 
-    public function __construct()
+    public static function middleware(): array
     {
-        $this->middleware('role:Admin')->only('fullSuccessRateRecord', 'successRate');
+        // Solo los administradores ven las estadísticas globales
+        return [
+            new Middleware('role:Admin', only: ['fullSuccessRateRecord', 'successRate']),
+        ];
     }
 
     public function throw($id)

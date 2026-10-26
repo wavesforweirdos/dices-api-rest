@@ -24,13 +24,13 @@ class AuthUserTest extends TestCase
         parent::setUp();
 
         $this->artisan("db:seed", ['--class' => 'RoleSeeder']);
-        $this->app->make(PermissionRegistrar::class)->registerPermissions();
+        $this->app->make(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
     /** @test */
     public function test_auth_user_can_be_updated_by_himself()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user = User::factory()->create();
         $user = Passport::actingAs($user);
@@ -54,7 +54,7 @@ class AuthUserTest extends TestCase
     /** @test */
     public function test_auth_user_can_be_updated_by_admin()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user = User::factory()->create();
         $admin = User::factory()->create()->assignRole('Admin');
@@ -79,7 +79,7 @@ class AuthUserTest extends TestCase
     /** @test */
     public function test_auth_user_cant_be_updated_by_others_no_admin_members()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user1 = User::factory()->create()->assignRole('Player');
         $user2 = User::factory()->create()->assignRole('Player');
@@ -104,7 +104,7 @@ class AuthUserTest extends TestCase
     /** @test */
     public function test_auth_user_cant_be_updated_with_empty_name()
     {
-        $this->artisan('passport:install');
+        $this->createPassportClients();
 
         $user = User::factory()->create();
         $user = Passport::actingAs($user);
@@ -118,6 +118,6 @@ class AuthUserTest extends TestCase
         $response = $this->put(
             route('editName', $user->id),
             $user_updated
-        )->assertStatus(302);
+        )->assertStatus(422);
     }
 }
