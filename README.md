@@ -46,14 +46,14 @@ The Postman collection is in [`postman/`](postman/dices-api-rest.postman_collect
 
 | | |
 |---|---|
-| **Back end** | PHP 8.3+, [Laravel 13](https://laravel.com/), [Passport](https://laravel.com/docs/passport), [spatie/laravel-permission](https://spatie.be/docs/laravel-permission), MySQL |
+| **Back end** | PHP 8.6+, [Laravel 13](https://laravel.com/), [Passport](https://laravel.com/docs/passport), [spatie/laravel-permission](https://spatie.be/docs/laravel-permission), MySQL |
 | **Front end** | [Vue 3](https://vuejs.org/), vue-router, Vuex, Oruga UI, [Tailwind](https://tailwindcss.com/), Bootstrap, [Vite](https://vite.dev/) |
 | **Real time** | Laravel Echo and [Pusher](https://pusher.com/) |
 | **Quality** | PHPUnit 12 (35 tests), GitHub Actions |
 
 ## Getting started
 
-You need PHP 8.3+ (it runs on 8.5, with the `sodium` extension enabled), Composer, Node 20+ and a MySQL database.
+You need PHP 8.6+ (with the `sodium` extension enabled), Composer, Node 20+ and a MySQL database.
 
 ```sh
 git clone https://github.com/wavesforweirdos/dices-api-rest
